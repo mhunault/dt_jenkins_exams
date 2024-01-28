@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_ID = "mhunault" // replace this with your docker-id
+       
         GITHUB_REPO = "dt_jenkins_exam"
     }
 
@@ -49,15 +49,16 @@ pipeline {
         stage('Push to DockerHub') {
             environment
                     {
+			DOCKER_HUB_USR = credentials("DOCKER_HUB_USR")
                         DOCKER_HUB_PASS = credentials("DOCKER_HUB_PASS") // we retrieve  docker password from secret text called docker_hub_pass saved on jenkins
                     }
             steps {
                 script {
                     // Connexion à DockerHub
                     sh '''
-			docker login -u $DOCKER_ID -p $DOCKER_HUB_PASS --password-stdin
-			docker push $DOCKER_ID/cast-service:latest
-			docker push $DOCKER_ID/movie-service:latest
+			docker login -u $DOCKER_HUB_USR -p $DOCKER_HUB_PASS --password-stdin
+			docker push $DOCKER_HUB_USR/cast-service:latest
+			docker push $DOCKER_HUB_USR/movie-service:latest
 			'''
 
                     // Pousser les images vers DockerHub
