@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_ID = "mhunault" // replace this with your docker-id
+        GITHUB_REPO = "dt_jenkins_exam"
     }
 
     stages {
@@ -30,13 +31,13 @@ pipeline {
             steps {
                 script {
                     // Déploiement dans Kubernetes pour cast-service
-                    dir('repo_github/kubernetes/cast-service') {
+                    dir('GITHUB_REPO/kubernetes/cast-service') {
                         sh 'kubectl apply -f deployment.yaml'
                         sh 'kubectl apply -f service.yaml'
                     }
 
                     // Déploiement dans Kubernetes pour movie-service
-                    dir('repo_github/kubernetes/movie-service') {
+                    dir('GITHUB_REPO/kubernetes/movie-service') {
                         sh 'kubectl apply -f deployment.yaml'
                         sh 'kubectl apply -f service.yaml'
                     }
