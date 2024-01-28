@@ -31,16 +31,17 @@ pipeline {
             steps {
                 script {
                     // Déploiement dans Kubernetes pour cast-service
-//                    dir('kubernetes/cast-service') {
+		    sh 'ls -la repo_github/kubernetes/cast-service'
+                    dir('GITHUB_REPO/kubernetes/cast-service') {
 //                        sh 'kubectl apply -f deployment.yaml'
 //                        sh 'kubectl apply -f service.yaml'
-//                    }
+                    }
 
                     // Déploiement dans Kubernetes pour movie-service
-//                    dir('kubernetes/movie-service') {
- //                       sh 'kubectl apply -f deployment.yaml'
-  //                      sh 'kubectl apply -f service.yaml'
-   //                 }
+                    dir('GITHUB_REPO/kubernetes/movie-service') {
+//                       sh 'kubectl apply -f deployment.yaml'
+//                      sh 'kubectl apply -f service.yaml'
+                 }
                 }
             }
         }
