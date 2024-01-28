@@ -55,8 +55,9 @@ pipeline {
                 script {
                     // Connexion à DockerHub
                     sh '''
-			docker login -u $DOCKER_ID -p $DOCKER_HUB_PASS
-			docker push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
+			docker login -u $DOCKER_ID -p $DOCKER_HUB_PASS --password-stdin
+			docker push $DOCKER_ID/cast-service:latest
+			docker push $DOCKER_ID/movie-service:latest
 			'''
 
                     // Pousser les images vers DockerHub
