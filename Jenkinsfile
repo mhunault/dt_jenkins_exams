@@ -54,7 +54,9 @@ pipeline {
             steps {
                 script {
                     // Connexion à DockerHub
-                    sh "docker login -u DOCKER_ID -p $DOCKER_HUB_PASS"
+                    sh '''
+			docker login -u $DOCKER_ID -p $DOCKER_HUB_PASS
+			'''
 
                     // Pousser les images vers DockerHub
                     sh 'docker push cast-service:latest'
