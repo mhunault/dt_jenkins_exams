@@ -56,11 +56,12 @@ pipeline {
                     // Connexion à DockerHub
                     sh '''
 			docker login -u $DOCKER_ID -p $DOCKER_HUB_PASS
+			docker push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
 			'''
 
                     // Pousser les images vers DockerHub
-                    sh 'docker push cast-service:latest'
-                    sh 'docker push movie-service:latest'
+                   // sh 'docker push cast-service:latest'
+                    //sh 'docker push movie-service:latest'
                 }
             }
         }
