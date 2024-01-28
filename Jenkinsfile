@@ -55,11 +55,16 @@ pipeline {
             steps {
                 script {
                     // Connexion à DockerHub
-                    sh '''
-			docker login -u $DOCKER_HUB_USR -p $DOCKER_HUB_PASS --password-stdin
-			docker push $DOCKER_HUB_USR/cast-service:latest
-			docker push $DOCKER_HUB_USR/movie-service:latest
-			'''
+//                    sh '''
+//			docker login -u $DOCKER_HUB_USR -p $DOCKER_HUB_PASS --password-stdin
+//			docker push $DOCKER_HUB_USR/cast-service:latest
+//			docker push $DOCKER_HUB_USR/movie-service:latest
+//			'''
+			sh 'echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin || true'
+
+            // Pousser les images vers DockerHub
+            sh 'docker push votre_nom/cast-service:latest'
+            sh 'docker push votre_nom/movie-service:latest'
 
                     // Pousser les images vers DockerHub
                    // sh 'docker push cast-service:latest'
