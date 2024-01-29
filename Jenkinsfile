@@ -1,28 +1,21 @@
 pipeline {
     agent any
-
     environment {
 	DOCKER_ID = 'mhunault'
-	DOCKER_TAG = "v.${BUILD_ID}.0"       
-        GITHUB_REPO = "dt_jenkins_exam"
+	DOCKER_TAG = "v.${BUILD_ID}.0"
+    GITHUB_REPO = "dt_jenkins_exam"
 	DOCKER_IMAGE = "dt_jenkins_exams"
     }
-
     stages {
         stage('Build and Test') {
             steps {
                 script {
-                    // Étape de construction et de test pour cast-service
                     dir('cast-service') {
                         sh 'docker build -t cast-service:latest .'
-//                         sh 'docker run cast-service:latest python -m pytest tests/'
                         sh 'docker run cast-service:latest'
                     }
-
-                    // Étape de construction et de test pour movie-service
                     dir('movie-service') {
                         sh 'docker build -t movie-service:latest .'
-//                         sh 'docker run movie-service:latest python -m pytest tests/'
                         sh 'docker run movie-service:latest'
                     }
                 }
@@ -32,52 +25,31 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Déploiement dans Kubernetes pour cast-service
-		    sh 'ls repo_github/kubernetes/cast-service'
+		            sh 'ls repo_github/kubernetes/cast-service'
                     dir('GITHUB_REPO/kubernetes/cast-service') {
-//                        sh 'kubectl apply -f deployment.yaml'
-//                        sh 'kubectl apply -f service.yaml'
+                        //sh 'kubectl apply -f deployment.yaml'
+                        //sh 'kubectl apply -f service.yaml'
                     }
-
-                    // Déploiement dans Kubernetes pour movie-service
                     dir('GITHUB_REPO/kubernetes/movie-service') {
-//                       sh 'kubectl apply -f deployment.yaml'
-//                      sh 'kubectl apply -f service.yaml'
-                 }
+                        //sh 'kubectl apply -f deployment.yaml'
+                        //sh 'kubectl apply -f service.yaml'
+                    }
                 }
             }
         }
-
         stage('Push to DockerHub') {
-            environment
-                    {
-			DOCKER_HUB_USR = credentials("DOCKER_HUB_USR")
-                        DOCKER_HUB_PASS = credentials("DOCKER_HUB_PASS") // we retrieve  docker password from secret text called docker_hub_pass saved on jenkins
-                    }
+            environment {
+			    DOCKER_HUB_USR = credentials("DOCKER_HUB_USR")
+                DOCKER_HUB_PASS = credentials("DOCKER_HUB_PASS")
+            }
             steps {
                 script {
-                    // Connexion à DockerHub
-//                    sh '''
-//			docker login -u $DOCKER_HUB_USR -p $DOCKER_HUB_PASS --password-stdin
-//			docker push $DOCKER_HUB_USR/cast-service:latest
-//			docker push $DOCKER_HUB_USR/movie-service:latest
-//			'''
-			sh 'echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin || true'
-
-           		 // Pousser les images vers DockerHub
-            		sh '''
-			docker push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
-			'''
-            		//sh 'docker push $DOCKER_HUB_USR/movie-service:latest'
-
-                    // Pousser les images vers DockerHub
-                   // sh 'docker push cast-service:latest'
-                    //sh 'docker push movie-service:latest'
+			        sh 'echo $DOCKER_HUB_PASS | docker login -u $DOCKER_HUB_USR --password-stdin || true'
+            		sh 'docker push $DOCKER_HUB_USR/movie-service'
                 }
             }
         }
     }
-
     post {
         success {
             echo 'Build, Deployment, and Push to DockerHub Successful!'
