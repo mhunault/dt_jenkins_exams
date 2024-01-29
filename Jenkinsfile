@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     environment {
-       
+	DOCKER_ID = 'mhunault'
+	DOCKER_TAG = "v.${BUILD_ID}.0"       
         GITHUB_REPO = "dt_jenkins_exam"
+	DOCKER_IMAGE = "dt_jenkins_exams"
     }
 
     stages {
@@ -62,9 +64,11 @@ pipeline {
 //			'''
 			sh 'echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin || true'
 
-            // Pousser les images vers DockerHub
-            sh 'docker push $DOCKER_HUB_USR/cast-service:latest'
-            sh 'docker push $DOCKER_HUB_USR/movie-service:latest'
+           		 // Pousser les images vers DockerHub
+            		sh '''
+			docker push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
+			'''
+            		//sh 'docker push $DOCKER_HUB_USR/movie-service:latest'
 
                     // Pousser les images vers DockerHub
                    // sh 'docker push cast-service:latest'
